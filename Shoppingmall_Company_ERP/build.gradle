@@ -32,3 +32,8 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+// Handle duplicate files in the war packaging
+tasks.named('war') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
