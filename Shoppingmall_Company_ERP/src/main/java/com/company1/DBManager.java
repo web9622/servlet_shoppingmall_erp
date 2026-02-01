@@ -37,6 +37,31 @@ public class DBManager {
          } else if (url.startsWith("jdbc:postgres://")) {
             url = "jdbc:postgresql://" + url.substring("jdbc:postgres://".length());
          }
+
+         // 만약 URL에 @(골뱅이)가 들어있다면 (유저:비번@호스트 형식), 정보를 분리합니다.
+         if (url.contains("@")) {
+            String prefix = "jdbc:postgresql://";
+            if (url.startsWith(prefix)) {
+               String rest = url.substring(prefix.length());
+               int atIndex = rest.lastIndexOf("@");
+               if (atIndex != -1) {
+                  String credentials = rest.substring(0, atIndex);
+                  String hostPart = rest.substring(atIndex + 1);
+
+                  // URL에서 호스트 부분만 남김 (PG 드라이버 요구사항)
+                  url = prefix + hostPart;
+
+                  // 환경변수가 비어있을 경우 URL에서 추출한 계정 정보 사용
+                  if (credentials.contains(":")) {
+                     String[] parts = credentials.split(":", 2);
+                     if (user == null || user.isEmpty())
+                        user = parts[0];
+                     if (password == null || password.isEmpty())
+                        password = parts[1];
+                  }
+               }
+            }
+         }
       }
 
       try {
