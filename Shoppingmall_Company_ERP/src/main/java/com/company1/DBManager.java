@@ -27,9 +27,16 @@ public class DBManager {
       if (password == null)
          password = "3N7wjv9oE9EZb0gzWiAn8Q2NeySFJTl8";
 
-      // 만약 URL이 postgresql:// 로 시작하면 앞에 jdbc: 를 붙여줍니다. (Render의 일반적인 형식 대응)
-      if (url != null && (url.startsWith("postgres://") || url.startsWith("postgresql://"))) {
-         url = "jdbc:" + url;
+      // Render가 주는 postgres:// 또는 postgresql:// 형식을 JDBC 표준인 jdbc:postgresql:// 로
+      // 변환합니다.
+      if (url != null) {
+         if (url.startsWith("postgres://")) {
+            url = "jdbc:postgresql://" + url.substring("postgres://".length());
+         } else if (url.startsWith("postgresql://")) {
+            url = "jdbc:postgresql://" + url.substring("postgresql://".length());
+         } else if (url.startsWith("jdbc:postgres://")) {
+            url = "jdbc:postgresql://" + url.substring("jdbc:postgres://".length());
+         }
       }
 
       try {
