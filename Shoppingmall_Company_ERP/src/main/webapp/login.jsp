@@ -24,6 +24,18 @@
             <h1>로그인</h1>
         </div>
 
+        <%-- 로그인 실패 시 에러 메시지 출력 --%>
+        <%
+            String error = (String)request.getAttribute("loginError");
+            if(error != null) {
+        %>
+            <div style="color: #ff4d4d; text-align: center; margin-bottom: 15px; font-weight: bold;">
+                <%= error %>
+            </div>
+        <%
+            }
+        %>
+
         <form action="LoginServlet" method="post" class="login-form">
             <%-- 로그인 텍스트쓰는 공간(인풋) --%>
             <div class="input-group">
