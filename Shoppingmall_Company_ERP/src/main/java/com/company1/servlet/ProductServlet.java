@@ -18,24 +18,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-
-@WebServlet(urlPatterns = {"/product", "/product/list", "/product/edit", "/product/delete"})
+@WebServlet(urlPatterns = { "/product", "/product/list", "/product/edit", "/product/delete" })
 public class ProductServlet extends HttpServlet {
 
-	private final ProductDAO productDAO = new ProductDAO();
+    private final ProductDAO productDAO = new ProductDAO();
 
     // Servlet이 처음 로드될 때 초기화합니다.
     public void init() {
         // ProductDAO 의존성 제거
     }
-    
+
     // 메모리에 Servlet 객체가 생성되면 init() 메소드가 호출됩니다.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
         String action = request.getParameter("action");
-        
+
         // action 파라미터가 없으면 요청 경로에서 action 유추
         if (action == null) {
             if (pathInfo == null || "/list".equals(pathInfo)) {
@@ -45,7 +44,7 @@ public class ProductServlet extends HttpServlet {
             } else if ("/delete".equals(pathInfo)) {
                 action = "delete";
             } else {
-                action = "list";  // 기본값
+                action = "list"; // 기본값
             }
         }
 
@@ -68,8 +67,9 @@ public class ProductServlet extends HttpServlet {
                 break;
         }
     }
+
     // 상품 목록 조회 및 검색 메소드
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
 
@@ -86,17 +86,17 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-	 private void listOrSearchProducts(HttpServletRequest req, HttpServletResponse resp)
+    private void listOrSearchProducts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         String action = req.getParameter("action");
         String search = req.getParameter("search");
         String pageParam = req.getParameter("page");
-        
+
         // 페이징 파라미터 처리
         int currentPage = 1;
         int recordsPerPage = 10;
-        
+
         if (pageParam != null) {
             try {
                 currentPage = Integer.parseInt(pageParam);
@@ -104,14 +104,14 @@ public class ProductServlet extends HttpServlet {
                 // 유효하지 않은 페이지 파라미터는 무시하고 1페이지로
             }
         }
-        
+
         boolean hasKeyword = (search != null && !search.trim().isEmpty());
         int offset = (currentPage - 1) * recordsPerPage;
 
         try {
             List<ProductDTO> products;
             int totalRecords;
-            
+
             if (hasKeyword) {
                 products = productDAO.searchProducts(search.trim(), offset, recordsPerPage);
                 totalRecords = productDAO.getNumberOfRecords(search.trim());
@@ -119,9 +119,9 @@ public class ProductServlet extends HttpServlet {
                 products = productDAO.getAllProducts(offset, recordsPerPage);
                 totalRecords = productDAO.getNumberOfRecords();
             }
-            
+
             int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
-            
+
             // 결과를 request에 저장
             req.setAttribute("products", products);
             req.setAttribute("search", search);
@@ -129,13 +129,13 @@ public class ProductServlet extends HttpServlet {
             req.setAttribute("recordsPerPage", recordsPerPage);
             req.setAttribute("noOfRecords", totalRecords);
             req.setAttribute("noOfPages", totalPages);
-            
+
             // 디버깅용 로그
-            System.out.println("[Product] action=" + action + 
-                             ", keyword=" + search + 
-                             ", page=" + currentPage + 
-                             ", total=" + totalRecords);
-            
+            System.out.println("[Product] action=" + action +
+                    ", keyword=" + search +
+                    ", page=" + currentPage +
+                    ", total=" + totalRecords);
+
         } catch (SQLException e) {
             throw new ServletException("Database error occurred", e);
         }
@@ -143,13 +143,12 @@ public class ProductServlet extends HttpServlet {
         req.getRequestDispatcher("/product_list.jsp").forward(req, resp);
     }
 
-
-	// 위에 붙여둔 escapeLike 그대로 사용
-	private String escapeLike(String s) {
-	    if (s == null) return "";
-	    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
-	}
-
+    // 위에 붙여둔 escapeLike 그대로 사용
+    private String escapeLike(String s) {
+        if (s == null)
+            return "";
+        return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+    }
 
     private void insertProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -162,7 +161,7 @@ public class ProductServlet extends HttpServlet {
             int stock = Integer.parseInt(request.getParameter("stock"));
 
             conn = DBManager.getDBConnection();
-            String sql = "INSERT INTO products(pid, pname, price, stock) VALUES(products_seq.NEXTVAL, ?, ?, ?)";
+            String sql = "INSERT INTO products(pname, price, stock) VALUES(?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, pname);
             pstmt.setDouble(2, price);
@@ -236,7 +235,7 @@ public class ProductServlet extends HttpServlet {
         try {
             int pid = Integer.parseInt(request.getParameter("pid"));
             ProductDTO product = productDAO.getProductById(pid);
-            
+
             if (product != null) {
                 request.setAttribute("product", product);
                 request.getRequestDispatcher("/product_edit.jsp").forward(request, response);
@@ -267,9 +266,8 @@ public class ProductServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write(String.format(
-                    "{\"pname\":\"%s\",\"price\":%f,\"stock\":%d}",
-                    product.getPname(), product.getPrice(), product.getStock()
-                ));
+                        "{\"pname\":\"%s\",\"price\":%f,\"stock\":%d}",
+                        product.getPname(), product.getPrice(), product.getStock()));
             } else {
                 System.out.println("[ProductServlet] Product not found for ID: " + pid);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -285,6 +283,5 @@ public class ProductServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-    
-    
+
 }

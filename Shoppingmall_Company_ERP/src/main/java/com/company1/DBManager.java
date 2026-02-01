@@ -21,11 +21,16 @@ public class DBManager {
 
       // 환경 변수가 없는 경우 기본값(로컬 개발 환경 설정)을 사용합니다.
       if (url == null)
-         url = "jdbc:oracle:thin:@localhost:1521/orcl";
+         url = "jdbc:postgresql://dpg-d5vip9coud1c738im700-a.virginia-postgres.render.com/t3_erp";
       if (user == null)
-         user = "project2_2504_team3";
+         user = "t3_erp_user";
       if (password == null)
-         password = "1234";
+         password = "3N7wjv9oE9EZb0gzWiAn8Q2NeySFJTl8";
+
+      // 만약 URL이 postgresql:// 로 시작하면 앞에 jdbc: 를 붙여줍니다. (Render의 일반적인 형식 대응)
+      if (url != null && (url.startsWith("postgres://") || url.startsWith("postgresql://"))) {
+         url = "jdbc:" + url;
+      }
 
       try {
          Class.forName("org.postgresql.Driver");

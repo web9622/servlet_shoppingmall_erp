@@ -16,12 +16,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class OrderServlet extends HttpServlet {
-    
+
     // GET
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null)
+            action = "list";
 
         switch (action) {
             case "list":
@@ -61,11 +62,11 @@ public class OrderServlet extends HttpServlet {
         try {
             conn = DBManager.getDBConnection();
             String sql = "SELECT o.oid, c.cname, p.pname, oi.quantity, oi.unit_price, o.order_date "
-                       + "FROM orders o "
-                       + "JOIN customers c ON o.cid = c.cid "
-                       + "JOIN order_items oi ON o.oid = oi.order_id "
-                       + "JOIN products p ON oi.product_id = p.pid "
-                       + "ORDER BY o.order_date DESC";
+                    + "FROM orders o "
+                    + "JOIN customers c ON o.cid = c.cid "
+                    + "JOIN order_items oi ON o.oid = oi.order_id "
+                    + "JOIN products p ON oi.product_id = p.pid "
+                    + "ORDER BY o.order_date DESC";
 
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -77,8 +78,7 @@ public class OrderServlet extends HttpServlet {
                         rs.getString("pname"),
                         rs.getInt("quantity"),
                         rs.getDouble("unit_price"),
-                        rs.getTimestamp("order_date")
-                );
+                        rs.getTimestamp("order_date"));
                 orderList.add(order);
             }
 
@@ -99,12 +99,12 @@ public class OrderServlet extends HttpServlet {
         Connection conn = null;
         PreparedStatement pstmt1 = null;
         PreparedStatement pstmt2 = null;
-        PreparedStatement pstmt3 = null;  // order_cancellations 삭제용
+        PreparedStatement pstmt3 = null; // order_cancellations 삭제용
 
         try {
             int oid = Integer.parseInt(request.getParameter("oid"));
             conn = DBManager.getDBConnection();
-            conn.setAutoCommit(false);  // 트랜잭션 시작
+            conn.setAutoCommit(false); // 트랜잭션 시작
 
             // 1. order_cancellations 테이블에서 해당 주문의 취소 기록 삭제
             String cancelSql = "DELETE FROM order_cancellations WHERE order_id = ?";
@@ -134,7 +134,8 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                if (conn != null) conn.rollback();  // 오류 발생 시 롤백
+                if (conn != null)
+                    conn.rollback(); // 오류 발생 시 롤백
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -148,8 +149,6 @@ public class OrderServlet extends HttpServlet {
         // 삭제 후 주문 목록 페이지로 리다이렉트 (새로 고침)
         response.sendRedirect(request.getContextPath() + "/OrderServlet?action=list");
     }
-
-
 
     // 주문 등록
     private void insertOrder(HttpServletRequest request, HttpServletResponse response)
@@ -170,27 +169,42 @@ public class OrderServlet extends HttpServlet {
             pstmt.setInt(1, productId);
             ResultSet rs = pstmt.executeQuery();
 
-            if (!rs.next()) throw new Exception("상품 정보 없음");
+            if (!rs.next())
+                throw new Exception("상품 정보 없음");
             double unitPrice = rs.getDouble("price");
             int stock = rs.getInt("stock");
             rs.close();
             pstmt.close();
 
-            if (stock < quantity) throw new Exception("재고 부족");
+            if (stock < quantity)
+                throw new Exception("재고 부족");
 
-            // orders 테이블에 추가
-            pstmt = conn.prepareStatement("INSERT INTO orders(oid, cid, order_date) VALUES (orders_seq.NEXTVAL, ?, SYSDATE)");
+            // OID는 SERIAL로 자동 생성되므로 INSERT 문에서 제외
+            // order_date는 CURRENT_TIMESTAMP로 자동 설정
+            pstmt = conn.prepareStatement("INSERT INTO orders(cid, order_date) VALUES (?, CURRENT_TIMESTAMP)",
+                    Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, cid);
             pstmt.executeUpdate();
+
+            int newOrderId = 0;
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    newOrderId = generatedKeys.getInt(1);
+                }
+            }
             pstmt.close();
+
+            if (newOrderId == 0)
+                throw new Exception("주문 번호 생성 실패");
 
             // order_items 테이블에 추가
             pstmt = conn.prepareStatement(
-                    "INSERT INTO order_items(order_item_id, order_id, product_id, quantity, unit_price) "
-                            + "VALUES(order_items_seq.NEXTVAL, orders_seq.CURRVAL, ?, ?, ? )");
-            pstmt.setInt(1, productId);
-            pstmt.setInt(2, quantity);
-            pstmt.setDouble(3, unitPrice);
+                    "INSERT INTO order_items(order_id, product_id, quantity, unit_price) "
+                            + "VALUES(?, ?, ?, ? )");
+            pstmt.setInt(1, newOrderId);
+            pstmt.setInt(2, productId);
+            pstmt.setInt(3, quantity);
+            pstmt.setDouble(4, unitPrice);
             pstmt.executeUpdate();
             pstmt.close();
 
@@ -209,7 +223,12 @@ public class OrderServlet extends HttpServlet {
             out.println("location.href='" + request.getContextPath() + "/OrderServlet?action=list';</script>");
 
         } catch (Exception e) {
-            try { if (conn != null) conn.rollback(); } catch (Exception ex) { ex.printStackTrace(); }
+            try {
+                if (conn != null)
+                    conn.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
 
             response.setContentType("text/html;charset=UTF-8");
