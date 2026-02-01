@@ -13,9 +13,20 @@ public class DBManager {
    public static Connection getDBConnection() {
       Connection conn = null;
 
+      // Render 등 배포 환경에서 설정한 환경 변수를 읽어옵니다.
+      // 로컬 개발 환경에서도 환경 변수를 설정하여 사용할 수 있습니다.
+      String url = System.getenv("DB_URL");
+      String user = System.getenv("DB_USER");
+      String password = System.getenv("DB_PASSWORD");
+
+      // 환경 변수가 없는 경우 기본값(기존 하드코딩된 값)을 사용하거나 오류를 발생시킬 수 있습니다.
+      if (url == null) url = "jdbc:oracle:thin:@1.220.247.78:1522/orcl";
+      if (user == null) user = "project2_2504_team3";
+      if (password == null) password = "1234";
+
       try {
          Class.forName("oracle.jdbc.OracleDriver");
-         conn = DriverManager.getConnection("jdbc:oracle:thin:@1.220.247.78:1522/orcl", "project2_2504_team3", "1234");
+         conn = DriverManager.getConnection(url, user, password);
       } catch (Exception var2) {
          var2.printStackTrace();
       }
