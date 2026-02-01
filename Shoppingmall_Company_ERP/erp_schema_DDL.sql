@@ -1,6 +1,17 @@
---기본(참고용)
 -- ======================================
--- 1. 사용자 테이블 (USERS)
+-- 0. 사용자 테이블 (USERS) - CUSTOMERS에서 참조
+-- ======================================
+CREATE TABLE USERS (
+    ID NUMBER(10) PRIMARY KEY,
+    USERID VARCHAR2(50) NOT NULL,
+    USERPW VARCHAR2(50) NOT NULL,
+    USERNAME VARCHAR2(50) NOT NULL
+);
+
+CREATE SEQUENCE USERS_ID_SEQ START WITH 1 INCREMENT BY 1;
+
+-- ======================================
+-- 1. 직원 테이블 (EMPLOYEES)
 -- ======================================
 CREATE TABLE employees (
     emp_id      VARCHAR2(20) PRIMARY KEY,     
@@ -66,7 +77,7 @@ CREATE TABLE ORDERS (
     CID NUMBER(10) NOT NULL,                 -- 주문한 고객 ID (FK → CUSTOMERS.CID)
     PID NUMBER(10) NOT NULL,                 -- 주문한 상품 ID (FK → PRODUCTS.PID)
     QUANTITY NUMBER(10) NOT NULL,            -- 주문 수량
-    ORDER_DATE TIMESTAMP DEFAULT SYSTIMESTAMP -- 주문일시 (기본: 현재 시간)
+    ORDER_DATE TIMESTAMP DEFAULT SYSTIMESTAMP, -- 주문일시 (기본: 현재 시간)
     -- FOREIGN KEY 설정 시:
      CONSTRAINT FK_ORDERS_CID FOREIGN KEY (CID) REFERENCES CUSTOMERS(CID) ON DELETE CASCADE,
      CONSTRAINT FK_ORDERS_PID FOREIGN KEY (PID) REFERENCES PRODUCTS(PID) ON DELETE CASCADE

@@ -19,10 +19,13 @@ public class DBManager {
       String user = System.getenv("DB_USER");
       String password = System.getenv("DB_PASSWORD");
 
-      // 환경 변수가 없는 경우 기본값(기존 하드코딩된 값)을 사용하거나 오류를 발생시킬 수 있습니다.
-      if (url == null) url = "jdbc:oracle:thin:@1.220.247.78:1522/orcl";
-      if (user == null) user = "project2_2504_team3";
-      if (password == null) password = "1234";
+      // 환경 변수가 없는 경우 기본값(로컬 개발 환경 설정)을 사용합니다.
+      if (url == null)
+         url = "jdbc:oracle:thin:@localhost:1521/orcl";
+      if (user == null)
+         user = "project2_2504_team3";
+      if (password == null)
+         password = "1234";
 
       try {
          Class.forName("oracle.jdbc.OracleDriver");
@@ -34,28 +37,30 @@ public class DBManager {
       return conn;
    }
 
-
-
    /**
-	* DB 연결을 종료하는 메서드입니다.
-	* ResultSet, PreparedStatement, Connection 객체를 순서대로 닫습니다.
-	* @param rs ResultSet 객체
-	* @param pstmt PreparedStatement 객체
-	* @param conn Connection 객체
-	*/
+    * DB 연결을 종료하는 메서드입니다.
+    * ResultSet, PreparedStatement, Connection 객체를 순서대로 닫습니다.
+    * 
+    * @param rs    ResultSet 객체
+    * @param pstmt PreparedStatement 객체
+    * @param conn  Connection 객체
+    */
    public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
       try {
-         if (rs != null) rs.close();
+         if (rs != null)
+            rs.close();
       } catch (Exception e) {
          e.printStackTrace();
       }
       try {
-         if (pstmt != null) pstmt.close();
+         if (pstmt != null)
+            pstmt.close();
       } catch (Exception e) {
          e.printStackTrace();
       }
       try {
-         if (conn != null) conn.close();
+         if (conn != null)
+            conn.close();
       } catch (Exception e) {
          e.printStackTrace();
       }
