@@ -14,7 +14,8 @@ repositories {
 
 dependencies {
     // Jakarta EE Web API (Provided for runtime, but needed for compile)
-    providedCompile 'jakarta.platform:jakarta.jakartaee-web-api:10.0.0'
+    compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:10.0.0'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     // Oracle JDBC Driver
     implementation 'com.oracle.database.jdbc:ojdbc8:21.9.0.0'
@@ -23,7 +24,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
-    // JSTL
+    // JSTL (Needs to be included in WAR for Tomcat)
     implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 }
