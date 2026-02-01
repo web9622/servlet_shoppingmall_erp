@@ -28,7 +28,7 @@ public class DBManager {
          password = "1234";
 
       try {
-         Class.forName("oracle.jdbc.OracleDriver");
+         Class.forName("org.postgresql.Driver");
          conn = DriverManager.getConnection(url, user, password);
       } catch (Exception var2) {
          var2.printStackTrace();
