@@ -14,7 +14,6 @@
 
             <body>
                 <%@ include file="common-jsp/header.jsp" %>
-
                     <% List<OrderDTO> orderList = (List<OrderDTO>) request.getAttribute("orderList");
                             Connection conn = com.company1.DBManager.getDBConnection();
                             int totalOrders = 0;
@@ -28,28 +27,29 @@
                                             PreparedStatement stmt;
                                             ResultSet rs;
 
-                                            String sqlTotal = "SELECT COUNT(*) AS cnt FROM orders";
-                                            stmt = conn.prepareStatement(sqlTotal);
+                                            String q1 = "SELECT COUNT(*) AS cnt FROM orders";
+                                            stmt = conn.prepareStatement(q1);
                                             rs = stmt.executeQuery();
                                             if (rs.next()) totalOrders = rs.getInt("cnt");
                                             rs.close(); stmt.close();
 
-                                            String sqlMonth = "SELECT COUNT(*) AS cnt FROM orders WHERE " +
-                                            "TO_CHAR(order_date, 'YYYYMM') = TO_CHAR(CURRENT_DATE, 'YYYYMM')";
-                                            stmt = conn.prepareStatement(sqlMonth);
+                                            String q2 = "SELECT COUNT(*) AS cnt FROM orders WHERE " +
+                                            "TO_CHAR(order_date, 'YYYYMM') = " +
+                                            "TO_CHAR(CURRENT_DATE, 'YYYYMM')";
+                                            stmt = conn.prepareStatement(q2);
                                             rs = stmt.executeQuery();
                                             if (rs.next()) monthOrders = rs.getInt("cnt");
                                             rs.close(); stmt.close();
 
-                                            String sqlSales = "SELECT COALESCE(SUM(quantity * unit_price), 0) AS total
-                                            FROM order_items";
-                                            stmt = conn.prepareStatement(sqlSales);
+                                            String q3 = "SELECT COALESCE(SUM(quantity * unit_price), 0) " +
+                                            "AS total FROM order_items";
+                                            stmt = conn.prepareStatement(q3);
                                             rs = stmt.executeQuery();
                                             if (rs.next()) totalSales = rs.getDouble("total");
                                             rs.close(); stmt.close();
 
-                                            String sqlCust = "SELECT cid, cname FROM customers ORDER BY cname ASC";
-                                            stmt = conn.prepareStatement(sqlCust);
+                                            String q4 = "SELECT cid, cname FROM customers ORDER BY cname ASC";
+                                            stmt = conn.prepareStatement(q4);
                                             rs = stmt.executeQuery();
                                             while (rs.next()) {
                                             Map<String, Object> map = new HashMap<>();
@@ -59,9 +59,8 @@
                                                     }
                                                     rs.close(); stmt.close();
 
-                                                    String sqlProd = "SELECT pid, pname FROM products ORDER BY pname
-                                                    ASC";
-                                                    stmt = conn.prepareStatement(sqlProd);
+                                                    String q5 = "SELECT pid, pname FROM products ORDER BY pname ASC";
+                                                    stmt = conn.prepareStatement(q5);
                                                     rs = stmt.executeQuery();
                                                     while (rs.next()) {
                                                     Map<String, Object> map = new HashMap<>();
@@ -76,7 +75,6 @@
                                                             e.printStackTrace();
                                                             }
                                                             %>
-
                                                             <div class="container">
                                                                 <div class="stats order-stats">
                                                                     <div class="stat-item">
@@ -98,7 +96,6 @@
                                                                         <div class="stat-label">총 매출액</div>
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="form-section order-form">
                                                                     <h2>🛒 신규 주문 등록</h2>
                                                                     <form
@@ -137,13 +134,11 @@
                                                                                 <input type="number" name="quantity"
                                                                                     min="1" value="1" required />
                                                                             </div>
-                                                                            <div class="form-actions">
-                                                                                <input type="submit" value="주문 생성" />
-                                                                            </div>
+                                                                            <div class="form-actions"><input
+                                                                                    type="submit" value="주문 생성" /></div>
                                                                         </div>
                                                                     </form>
                                                                 </div>
-
                                                                 <div class="list-section">
                                                                     <h2>📋 최근 주문 내역</h2>
                                                                     <table class="order-table">
@@ -188,8 +183,7 @@
                                                                                     <td>
                                                                                         <%= order.getOrderDate() %>
                                                                                     </td>
-                                                                                    <td>
-                                                                                        <a href="<%= request.getContextPath() %>/OrderServlet?action=delete&oid=<%= order.getOid() %>"
+                                                                                    <td><a href="<%= request.getContextPath() %>/OrderServlet?action=delete&oid=<%= order.getOid() %>"
                                                                                             class="btn-delete"
                                                                                             onclick="return confirm('삭제하시겠습니까?');">삭제</a>
                                                                                     </td>
