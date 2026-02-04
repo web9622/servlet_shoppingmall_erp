@@ -7,7 +7,7 @@
 
             <head>
                 <meta charset="UTF-8">
-                <title>주문 관리</title>
+                <title>주문 관리 - Shoppingmall ERP</title>
                 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/common.css">
                 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/order.css">
             </head>
@@ -30,6 +30,7 @@
                                     List<Map<String, Object>> productList = new ArrayList<>();
 
                                             try {
+                                            if (conn != null) {
                                             PreparedStatement stmt;
                                             ResultSet rs;
 
@@ -81,6 +82,7 @@
                                                             stmt.close();
 
                                                             conn.close();
+                                                            }
                                                             } catch (Exception e) {
                                                             e.printStackTrace();
                                                             }
