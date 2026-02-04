@@ -13,19 +13,19 @@
                         <a href="#">사용자 관리 <span style="font-size: 0.7rem; opacity: 0.7;">▼</span></a>
                         <ul class="dropdown-menu">
                             <li><a href="employee_form.jsp">직원 등록</a></li>
-                            <li><a href="EmployeeServlet?command=list">직원 관리</a></li>
+                            <li><a href="EmployeeServlet?action=list">직원 관리</a></li>
                         </ul>
                     </li>
 
                     <li>
                         <a href="#">상품 관리 <span style="font-size: 0.7rem; opacity: 0.7;">▼</span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="ProductServlet?command=list">상품 목록</a></li>
+                            <li><a href="ProductServlet?action=list">상품 목록</a></li>
                             <li><a href="product_add.jsp">상품 추가</a></li>
                         </ul>
                     </li>
-                    <li><a href="OrderServlet?command=list">주문 관리</a></li>
-                    <li><a href="CustomerServlet?command=list">고객 관리</a></li>
+                    <li><a href="OrderServlet?action=list">주문 관리</a></li>
+                    <li><a href="CustomerServlet?action=list">고객 관리</a></li>
                     <li><a href="groupware.jsp">그룹웨어</a></li>
                 </ul>
             </nav>
