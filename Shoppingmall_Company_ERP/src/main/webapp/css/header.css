@@ -16,6 +16,14 @@ header {
     align-items: center;
 }
 
+nav ul.main-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
 nav ul.main-menu>li {
     position: relative;
     display: flex;
