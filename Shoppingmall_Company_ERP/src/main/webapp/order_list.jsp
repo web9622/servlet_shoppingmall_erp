@@ -14,7 +14,8 @@
         <body>
             <%@ include file="common-jsp/header.jsp" %>
 
-                <% // Servlet에서 전달받은 데이터 List<OrderDTO> orderList = (List<OrderDTO>) request.getAttribute("orderList");
+                <% /* Servlet에서 전달받은 데이터 */ List<OrderDTO> orderList = (List<OrderDTO>)
+                        request.getAttribute("orderList");
                         Integer totalOrders = (Integer) request.getAttribute("totalOrders");
                         Integer monthOrders = (Integer) request.getAttribute("monthOrders");
                         Double totalSales = (Double) request.getAttribute("totalSales");
@@ -23,7 +24,7 @@
                                 List<Map<String, Object>> productList = (List<Map<String, Object>>)
                                         request.getAttribute("productList");
 
-                                        // null 체크 및 기본값 설정
+                                        /* null 체크 및 기본값 설정 */
                                         if (totalOrders == null) totalOrders = 0;
                                         if (monthOrders == null) monthOrders = 0;
                                         if (totalSales == null) totalSales = 0.0;
