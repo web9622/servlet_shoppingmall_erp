@@ -16,30 +16,52 @@ body {
     margin: 0;
 }
 
-/* 헤더가 있는 로그인 페이지를 위한 컨테이너 */
 .page-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px); /* 헤더 높이만큼 빼기 */
-    padding: 20px 0;
+    min-height: calc(100vh - 100px);
+    padding: 2rem;
+    background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
 }
 
 .login-container {
-    background-color: white;
-    padding: 40px 35px;
-    border-radius: 8px;
-    width: 420px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 3rem 2.5rem;
+    border-radius: 1.5rem;
+    width: 100%;
+    max-width: 440px;
     text-align: center;
-    border: 3px solid black;
-    margin: 0 auto;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .logo h1 {
-    color: #03c75a;
-    font-size: 50px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    color: var(--text-main);
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    letter-spacing: -0.05em;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .login-form {
@@ -48,60 +70,75 @@ body {
 
 .input-group {
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 1.25rem;
+    text-align: left;
 }
 
 .input-group input {
     width: 100%;
-    height: 50px;
-    padding: 15px;
-    border: 1px solid #dadada;
-    border-radius: 6px;
-    font-size: 16px;
+    height: 3.5rem;
+    padding: 0 1.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    font-size: 1rem;
     outline: none;
+    transition: all 0.2s;
+    background-color: white;
 }
 
-.input-group input::placeholder {
-    color: #999;
+.input-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .login-btn {
     width: 100%;
-    height: 55px;
-    background-color: #03c75a;
+    height: 3.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: white;
     border: none;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 1.125rem;
+    font-weight: 700;
     cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    border-radius: 6px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
 }
 
 .login-btn:hover {
-    background-color: #028c47;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+    filter: brightness(1.1);
 }
 
 .find-links {
-    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
 }
 
 .find-links a {
-    color: #666;
-    font-size: 14px;
-    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .find-links a:hover {
-    color: #03c75a;
+    color: var(--primary-color);
 }
 
 .find-links span {
-    color: #ccc;
-    margin: 0 10px;
+    color: var(--border-color);
 }
 
 .title {
-    white-space: nowrap; /* 1줄로 만드는 코드 */
+    white-space: nowrap;
+    /* 1줄로 만드는 코드 */
 }
