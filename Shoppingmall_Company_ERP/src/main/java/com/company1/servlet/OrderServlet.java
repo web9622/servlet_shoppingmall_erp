@@ -81,8 +81,71 @@ public class OrderServlet extends HttpServlet {
                         rs.getTimestamp("order_date"));
                 orderList.add(order);
             }
+            rs.close();
+            pstmt.close();
+
+            // 추가 통계 데이터 조회 (JSP의 컴파일 오류를 방지하기 위해 서블릿에서 처리)
+            int totalOrders = 0;
+            int monthOrders = 0;
+            double totalSales = 0;
+
+            // 1. 전체 주문 수
+            pstmt = conn.prepareStatement("SELECT COUNT(*) AS cnt FROM orders");
+            rs = pstmt.executeQuery();
+            if (rs.next())
+                totalOrders = rs.getInt("cnt");
+            rs.close();
+            pstmt.close();
+
+            // 2. 이번 달 주문 수
+            pstmt = conn.prepareStatement(
+                    "SELECT COUNT(*) AS cnt FROM orders WHERE TO_CHAR(order_date, 'YYYYMM') = TO_CHAR(CURRENT_DATE, 'YYYYMM')");
+            rs = pstmt.executeQuery();
+            if (rs.next())
+                monthOrders = rs.getInt("cnt");
+            rs.close();
+            pstmt.close();
+
+            // 3. 총 매출
+            pstmt = conn.prepareStatement("SELECT COALESCE(SUM(quantity * unit_price), 0) AS total FROM order_items");
+            rs = pstmt.executeQuery();
+            if (rs.next())
+                totalSales = rs.getDouble("total");
+            rs.close();
+            pstmt.close();
+
+            // 4. 고객 목록
+            List<java.util.Map<String, Object>> customerList = new ArrayList<>();
+            pstmt = conn.prepareStatement("SELECT cid, cname FROM customers ORDER BY cname ASC");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("cid", rs.getInt("cid"));
+                map.put("cname", rs.getString("cname"));
+                customerList.add(map);
+            }
+            rs.close();
+            pstmt.close();
+
+            // 5. 상품 목록
+            List<java.util.Map<String, Object>> productList = new ArrayList<>();
+            pstmt = conn.prepareStatement("SELECT pid, pname FROM products ORDER BY pname ASC");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                java.util.Map<String, Object> map = new java.util.HashMap<>();
+                map.put("pid", rs.getInt("pid"));
+                map.put("pname", rs.getString("pname"));
+                productList.add(map);
+            }
+            rs.close();
+            pstmt.close();
 
             request.setAttribute("orderList", orderList);
+            request.setAttribute("totalOrders", totalOrders);
+            request.setAttribute("monthOrders", monthOrders);
+            request.setAttribute("totalSales", totalSales);
+            request.setAttribute("customerList", customerList);
+            request.setAttribute("productList", productList);
             RequestDispatcher rd = request.getRequestDispatcher("order_list.jsp");
             rd.forward(request, response);
 
