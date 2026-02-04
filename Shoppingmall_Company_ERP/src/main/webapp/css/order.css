@@ -1,138 +1,107 @@
 /* 주문 관리 전용 스타일 */
 .order-stats .stat-item:nth-child(1) .stat-number {
-    color: #9C27B0;
+    color: var(--primary-color);
 }
 
 .order-stats .stat-item:nth-child(2) .stat-number {
-    color: #4CAF50;
+    color: #10b981;
 }
 
 .order-stats .stat-item:nth-child(3) .stat-number {
-    color: #FF9800;
+    color: #f59e0b;
 }
 
 .order-form {
-    background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
-    color: white;
-    padding: 30px;
-    border-radius: 8px;
-    margin-bottom: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
 }
 
-.order-form h3 {
-    color: white;
-    border-bottom-color: rgba(255,255,255,0.3);
+.order-form h2 {
+    color: var(--text-main);
+    font-weight: 800;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.75rem;
+    display: inline-block;
 }
 
 .order-form .form-group label {
-    color: white;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
-.order-form .form-group select, .order-form .form-group input {
-    background: rgba(255,255,255,0.9);
-    border: none;
+.order-form .form-group select,
+.order-form .form-group input {
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+}
+
+.order-form .form-actions {
+    margin-top: 0;
 }
 
 .order-form .form-actions input[type=submit] {
-    background-color: rgba(255,255,255,0.2);
-    border: 2px solid white;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .order-form .form-actions input[type=submit]:hover {
-    background-color: white;
-    color: #9C27B0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
 }
 
 .order-table th {
-    background: linear-gradient(135deg, #9C27B0, #7B1FA2);
-    color: white;
-}
-
-.order-table tr:nth-child(even) {
-    background-color: #f3e5f5;
-}
-
-.order-table tr:hover {
-    background-color: #e1bee7;
+    background-color: #f1f5f9;
+    color: var(--text-muted);
 }
 
 .order-id {
-    font-weight: bold;
-    color: #9C27B0;
+    font-weight: 800;
+    color: var(--primary-color);
 }
 
 .order-customer {
-    font-weight: bold;
-    color: #333;
+    font-weight: 600;
+    color: var(--text-main);
 }
 
 .order-product {
-    color: #666;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 .order-quantity {
-    color: #2196F3;
-    font-weight: bold;
-    text-align: center;
+    color: var(--text-main);
+    font-weight: 600;
 }
 
 .order-price {
-    color: #4CAF50;
-    font-weight: bold;
-    text-align: right;
+    color: var(--text-muted);
 }
 
 .order-date {
-    color: #999;
-    font-size: 12px;
-}
-
-.order-actions {
-    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
 }
 
 .order-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 20px;
+    gap: 1.5rem;
     align-items: end;
-}
-
-.order-form-row .form-group {
-    margin-bottom: 0;
-}
-
-.order-form-row .form-actions {
-    margin-top: 0;
-}
-
-.order-form-row .form-actions input[type=submit] {
-    padding: 12px 20px;
-    white-space: nowrap;
-    color:black;
-}
-
-.order-summary {
-    background: linear-gradient(135deg, #E1BEE7 0%, #CE93D8 100%);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.order-summary h4 {
-    color: #7B1FA2;
-    margin: 0 0 10px 0;
-}
-
-.order-summary .summary-item {
-    display: inline-block;
-    margin: 0 20px;
-    color: #7B1FA2;
-    font-weight: bold;
-}
-
-.gray_bg {
-	background-color: #b7acac !important;
 }

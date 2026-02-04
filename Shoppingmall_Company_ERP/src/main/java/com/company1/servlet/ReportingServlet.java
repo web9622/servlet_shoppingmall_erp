@@ -32,7 +32,7 @@ public class ReportingServlet extends HttpServlet {
                 "LEFT JOIN order_cancellations oc ON oc.order_id = o.oid " +
                 "WHERE oc.order_id IS NULL " + // ← 취소된 주문 제외
                 "GROUP BY TO_CHAR(o.order_date, 'YYYY-MM') " +
-                "ORDER BY TO_CHAR(o.order_date, 'YYYY-MM')";
+                "ORDER BY month";
 
         // 취소 통계 쿼리
         String cancelSql = "SELECT TO_CHAR(cancel_date, 'YYYY-MM') AS cancel_month, " +
